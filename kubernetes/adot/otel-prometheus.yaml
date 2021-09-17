@@ -46,6 +46,10 @@ data:
     processors:
       batch:
         timeout: 60s
+      resourcedetection:
+        detectors: [ env ]
+        timeout: 2s
+        override: false
       resource:
         attributes:
           - key: TaskId
@@ -102,7 +106,7 @@ data:
       pipelines:
         metrics:
           receivers: [prometheus]
-          processors: [resource]
+          processors: [resourcedetection, resource]
           exporters: [awsemf]
 
 
