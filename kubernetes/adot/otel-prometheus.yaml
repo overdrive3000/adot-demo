@@ -76,7 +76,7 @@ data:
           - dimensions: [["ClusterName","Service","resource"]]
             metric_name_selectors:
               - "^etcd_object_counts$"
-            label_matcher:
+            label_matchers:
               - label_names:
                   - job
                   - name
@@ -86,7 +86,7 @@ data:
               - "^workqueue_depth$"
               - "^workqueue_adds_total$"
               - "^workqueue_retries_total$"
-            label_matcher:
+            label_matchers:
               - label_names:
                   - job
                   - name
@@ -94,7 +94,7 @@ data:
           - dimensions: [["ClusterName","Service","code"]]
             metric_name_selectors:
               - "^apiserver_request_total$"
-            label_matcher:
+            label_matchers:
               - label_names:
                   - job
                   - code
@@ -102,7 +102,7 @@ data:
           - dimensions: [["ClusterName","Service"]]
             metric_name_selectors:
               - "^apiserver_request_total$"
-            label_matcher:
+            label_matchers:
               - label_names:
                   - job
                 regex: "^kubernetes-apiservers"
