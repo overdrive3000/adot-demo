@@ -30,7 +30,7 @@ spec:
             - name: MYSQL_USER
               value: admin
             #- name: OTEL_JAEGER_AGENT_HOST
-            #  value: jaeger-tracing
+            #  value: aws-otel-eks.aws-otel-eks.svc.cluster.local
             #- name: OTEL_JAEGER_AGENT_PORT
             #  value: "6831"
             #- name: OTEL_JAEGER_SERVICE_NAME

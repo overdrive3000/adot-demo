@@ -24,7 +24,7 @@ spec:
       containers:
         - env:
             #- name: OTEL_EXPORTER_JAEGER_ENDPOINT
-            #  value: http://aws-otel-eks.observability.svc.cluster.local:14250
+            #  value: http://aws-otel-eks.aws-otel-eks.svc.cluster.local:14250
             #- name: OTEL_METRICS_EXPORTER
             #  value: none
             #- name: OTEL_PROPAGATORS

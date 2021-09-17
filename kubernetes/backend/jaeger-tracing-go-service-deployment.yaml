@@ -28,7 +28,7 @@ spec:
             - name: MONGODB_URI
               value: mongodb://admin:admin@employee-mongo:27017/admin
             #- name: OTEL_JAEGER_ENDPOINT
-            #  value: http://aws-otel-eks.observability.svc.cluster.local:14268
+            #  value: http://aws-otel-eks.aws-otel-eks.svc.cluster.local:14268
             #- name: OTEL_JAEGER_SERVICE_NAME
             #  value: go-service
           image: overdrive3000/jaeger-tracing-go-service

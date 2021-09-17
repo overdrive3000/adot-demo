@@ -24,7 +24,7 @@ spec:
       containers:
         - env:
             #- name: JAEGER_AGENT_HOST
-            #  value: aws-otel-eks.observability.svc.cluster.local
+            #  value: aws-otel-eks.aws-otel-eks.svc.cluster.local
             #- name: JAEGER_AGENT_PORT
             #  value: "6832"
             - name: GO_SERVICE_URL
