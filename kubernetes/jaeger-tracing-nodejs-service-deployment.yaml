@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  labels:
+    io.kompose.service: jaeger-tracing-nodejs-service
+  name: jaeger-tracing-nodejs-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jaeger-tracing-nodejs-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      labels:
+        io.kompose.service: jaeger-tracing-nodejs-service
+    spec:
+      containers:
+        - env:
+            - name: GO_SERVICE_URL
+              value: http://jaeger-tracing-go-service:8091/
+            - name: JAEGER_AGENT_HOST
+              value: aws-otel-eks.observability.svc.cluster.local
+            - name: JAEGER_AGENT_PORT
+              value: "6832"
+            - name: JAVA_SERVICE_URL
+              value: http://jaeger-tracing-java-service:8090/
+            - name: PYTHON_SERVICE_URL
+              value: http://jaeger-tracing-python-service:8092/
+            - name: SERVER_PORT
+              value: "8081"
+            - name: SERVICE_NAME
+              value: nodejs-service
+          image: overdrive3000/jaeger-tracing-nodejs-service:0.0.2
+          name: jaeger-tracing-nodejs-service
+          ports:
+            - containerPort: 8081
+          resources: {}
+      restartPolicy: Always

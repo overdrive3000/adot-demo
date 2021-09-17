@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  labels:
+    io.kompose.service: jaeger-tracing-go-service
+  name: jaeger-tracing-go-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jaeger-tracing-go-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      labels:
+        io.kompose.service: jaeger-tracing-go-service
+    spec:
+      containers:
+        - env:
+            - name: DATABASE_NAME
+              value: employees
+            - name: MONGODB_URI
+              value: mongodb://admin:admin@employee-mongo:27017/admin
+            - name: OTEL_JAEGER_ENDPOINT
+              value: http://aws-otel-eks.observability.svc.cluster.local:14268
+            - name: OTEL_JAEGER_SERVICE_NAME
+              value: go-service
+          image: overdrive3000/jaeger-tracing-go-service
+          name: jaeger-tracing-go-service
+          ports:
+            - containerPort: 8091
+          resources: {}
+      restartPolicy: Always

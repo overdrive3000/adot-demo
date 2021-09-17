@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  labels:
+    io.kompose.service: jaeger-tracing-java-service
+  name: jaeger-tracing-java-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jaeger-tracing-java-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      labels:
+        io.kompose.service: jaeger-tracing-java-service
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+              value: http://aws-otel-eks.observability.svc.cluster.local:14250
+            - name: OTEL_METRICS_EXPORTER
+              value: none
+            - name: OTEL_PROPAGATORS
+              value: xray
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.name=java-service
+            - name: OTEL_TRACES_EXPORTER
+              value: jaeger
+            - name: SERVER_PORT
+              value: "8090"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://salary-postgres:5432/salary-grade
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+          image: overdrive3000/jaeger-tracing-java-service
+          name: jaeger-tracing-java-service
+          ports:
+            - containerPort: 8090
+          resources: {}
+      restartPolicy: Always

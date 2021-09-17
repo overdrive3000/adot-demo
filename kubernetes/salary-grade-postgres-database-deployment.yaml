@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  labels:
+    io.kompose.service: salary-grade-postgres-database
+  name: salary-grade-postgres-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: salary-grade-postgres-database
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      labels:
+        io.kompose.service: salary-grade-postgres-database
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: salary-grade
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: overdrive3000/salary-postgres
+          name: salary-postgres
+          ports:
+            - containerPort: 5432
+          resources: {}
+      restartPolicy: Always

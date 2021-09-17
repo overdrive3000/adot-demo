@@ -1,0 +1,48 @@
+{
+  "name": "jaeger-tracing-nodejs-service",
+  "version": "1.0.0",
+  "description": "This is a NodeJS project to demo Jaeger Distributed Tracing",
+  "scripts": {
+    "start": "./node_modules/.bin/nodemon -r ./main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChrisJBurns/jaeger-tracing-nodejs-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChrisJBurns/jaeger-tracing-nodejs-service/issues"
+  },
+  "homepage": "https://github.com/ChrisJBurns/jaeger-tracing-nodejs-service#readme",
+  "dependencies": {
+    "@opentelemetry/api": "^1.0.3",
+    "@opentelemetry/exporter-collector-grpc": "^0.24.0",
+    "@opentelemetry/exporter-jaeger": "^0.25.0",
+    "@opentelemetry/id-generator-aws-xray": "^0.25.0",
+    "@opentelemetry/instrumentation-express": "^0.25.0",
+    "@opentelemetry/instrumentation-http": "^0.25.0",
+    "@opentelemetry/propagator-aws-xray": "^0.25.0",
+    "@opentelemetry/resource-detector-aws": "^0.25.0",
+    "@opentelemetry/sdk-trace-base": "0.25.0",
+    "@opentelemetry/sdk-trace-node": "0.25.0",
+    "@opentelemetry/tracing": "^0.24.0",
+    "axios": "^0.21.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "nodemon": "^2.0.4"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {}
+  }
+}

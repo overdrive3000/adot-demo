@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  labels:
+    io.kompose.service: jaeger-tracing-python-service
+  name: jaeger-tracing-python-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jaeger-tracing-python-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      labels:
+        io.kompose.service: jaeger-tracing-python-service
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_HOST
+              value: jaeger-tracing-salaryamount-mysql
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_USER
+              value: admin
+            - name: OTEL_JAEGER_AGENT_HOST
+              value: jaeger-tracing
+            - name: OTEL_JAEGER_AGENT_PORT
+              value: "6831"
+            - name: OTEL_JAEGER_SERVICE_NAME
+              value: python-service
+            - name: OTEL_PYTHON_TRACER_PROVIDER
+              value: sdk_tracer_provider
+            - name: OTEL_PROPAGATORS
+              value: xray
+            - name: OTEL_PYTHON_ID_GENERATOR
+              value: xray
+          image: overdrive3000/jaeger-tracing-python-service:0.0.1
+          name: jaeger-tracing-python-service
+          ports:
+            - containerPort: 8092
+          resources: {}
+      restartPolicy: Always

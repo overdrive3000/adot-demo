@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jaeger-tracing-salaryamount-mysql
+  name: jaeger-tracing-salaryamount-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jaeger-tracing-salaryamount-mysql
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jaeger-tracing-salaryamount-mysql
+    spec:
+      containers:
+        - env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: MYSQL_DATABASE
+              value: salary_amount
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_USER
+              value: admin
+          image: overdrive3000/jaeger-tracing-salaryamount-mysql
+          name: jaeger-tracing-salaryamount-mysql
+          ports:
+            - containerPort: 3306
+          resources: {}
+      restartPolicy: Always
+status: {}
