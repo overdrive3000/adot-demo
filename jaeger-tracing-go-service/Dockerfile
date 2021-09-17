@@ -3,7 +3,7 @@ RUN mkdir /build
 ADD . /build/
 WORKDIR /build 
 RUN apk update && apk add git
-RUN go env -w GOPROXY=direct && go build -o main .
+RUN go build -o main .
 
 FROM alpine
 RUN adduser -S -D -H -h /app appuser
