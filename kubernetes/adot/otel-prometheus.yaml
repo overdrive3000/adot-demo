@@ -83,8 +83,8 @@ data:
                 regex: "^kubernetes-apiservers;(services|daemonsets.apps|deployments.apps|configmaps|endpoints|secrets|serviceaccounts|replicasets.apps)"
           - dimensions: [["ClusterName","Service","name"]]
             metric_name_selectors:
-              - "^workqueue_depth$",
-              - "^workqueue_adds_total$",
+              - "^workqueue_depth$"
+              - "^workqueue_adds_total$"
               - "^workqueue_retries_total$"
             label_matcher:
               - label_names:
