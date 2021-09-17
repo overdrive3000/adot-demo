@@ -129,6 +129,10 @@ spec:
         - name: aws-otel-collector
           image: amazon/aws-otel-collector:v0.11.0
           env:
+            - name: AWS_REGION
+              value: ${AWS_REGION}
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: ClusterName=${CLUSTER_NAME}
             - name: K8S_NODE_NAME
               valueFrom:
                 fieldRef:
