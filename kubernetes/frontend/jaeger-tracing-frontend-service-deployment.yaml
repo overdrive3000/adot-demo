@@ -50,5 +50,5 @@ metadata:
   name: frontend-env
 data:
   .env: |
-     VUE_APP_NODEJS_SERVICE_URL=http://a116f494349334ab3b7c18e4a410c2e5-706016891.eu-west-1.elb.amazonaws.com:8081/
+     VUE_APP_NODEJS_SERVICE_URL=http://${API_BACKEND}:8081/
      VUE_APP_SERVER_PORT=8080

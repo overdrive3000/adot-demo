@@ -4,7 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)
-  creationTimestamp: null
   labels:
     io.kompose.service: jaeger-tracing-salaryamount-mysql
   name: jaeger-tracing-salaryamount-mysql
@@ -15,5 +14,3 @@ spec:
       targetPort: 3306
   selector:
     io.kompose.service: jaeger-tracing-salaryamount-mysql
-status:
-  loadBalancer: {}

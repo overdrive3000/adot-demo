@@ -4,7 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.22.0 (955b78124)
-  creationTimestamp: null
   labels:
     io.kompose.service: jaeger-tracing-python-service
   name: jaeger-tracing-python-service
@@ -15,5 +14,3 @@ spec:
       targetPort: 8092
   selector:
     io.kompose.service: jaeger-tracing-python-service
-status:
-  loadBalancer: {}
