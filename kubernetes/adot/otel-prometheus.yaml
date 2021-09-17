@@ -1,0 +1,208 @@
+# Copy of - https://raw.githubusercontent.com/aws-aws-otel-eks/aws-otel-collector/main/deployment-template/eks/otel-container-insights-infra.yaml
+# create namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aws-otel-eks
+  labels:
+    name: aws-otel-eks
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-agent-conf-prom
+  namespace: aws-otel-eks
+  labels:
+    app: opentelemetry
+    component: otel-agent-conf
+data:
+  otel-agent-config: |
+    extensions:
+      health_check:
+
+    receivers:
+      prometheus:
+        config:
+          scrape_configs:
+            # Scrape config for API servers
+            - job_name: 'kubernetes-apiservers'
+              kubernetes_sd_configs:
+                - role: endpoints
+                  namespaces:
+                    names:
+                      - default
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+              bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              relabel_configs:
+              - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+                action: keep
+                regex: kubernetes;https
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_namespace
+                target_label: Namespace
+              - action: replace
+                source_labels:
+                - __meta_kubernetes_service_name
+                target_label: Service
+
+
+
+    processors:
+      batch:
+        timeout: 60s
+      resource:
+        attributes:
+          - key: TaskId
+            from_attribute: job
+            action: insert
+          - key: receiver
+            value: "prometheus"
+            action: insert
+
+    exporters:
+      awsemf:
+        namespace: ContainerInsights/Prometheus
+        log_group_name: "/aws/containerinsights/{ClusterName}/prometheus"
+        log_stream_name: "{TaskId}"
+        resource_to_telemetry_conversion:
+          enabled: true
+        dimension_rollup_option: NoDimensionRollup
+        metric_declarations:
+          - dimensions: [["ClusterName","Service","resource"]]
+            metric_name_selectors:
+              - "^etcd_object_counts$"
+            label_matcher:
+              label_names:
+                - job
+                - name
+              regexp: "^kubernetes-apiservers;(services|daemonsets.apps|deployments.apps|configmaps|endpoints|secrets|serviceaccounts|replicasets.apps)"
+          - dimensions: [["ClusterName","Service","name"]]
+            metric_name_selectors:
+              - "^workqueue_depth$",
+              - "^workqueue_adds_total$",
+              - "^workqueue_retries_total$
+            label_matcher:
+              label_names:
+                - job
+                - name
+              regexp: "^kubernetes-apiservers;APIServiceRegistrationController$"
+          - dimensions: [["ClusterName","Service","code"]]
+            metric_name_selectors:
+              - "^apiserver_request_total$"
+            label_matcher:
+              label_names:
+                - job
+                - code
+              regexp: "^kubernetes-apiservers;2[0-9]{2}$"
+          - dimensions: [["ClusterName","Service"]]
+            metric_name_selectors:
+              - "^apiserver_request_total$"
+            label_matcher:
+              label_names:
+                - job
+              regexp: "^kubernetes-apiservers"
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [prometheus]
+          processors: [resource]
+          exporters: [awsemf]
+
+
+      extensions: [health_check]
+
+
+---
+# create Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-otel-eks-prometheus
+  namespace: aws-otel-eks
+spec:
+  selector:
+    matchLabels:
+      name: aws-otel-eks-prometheus
+  template:
+    metadata:
+      labels:
+        name: aws-otel-eks-prometheus
+    spec:
+      containers:
+        - name: aws-otel-collector
+          image: amazon/aws-otel-collector:v0.11.0
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: HOST_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: K8S_NAMESPACE
+              valueFrom:
+                 fieldRef:
+                   fieldPath: metadata.namespace
+          imagePullPolicy: Always
+          command:
+            - "/awscollector"
+            - "--config=/conf/otel-agent-config.yaml"
+          volumeMounts:
+            - name: rootfs
+              mountPath: /rootfs
+              readOnly: true
+            - name: dockersock
+              mountPath: /var/run/docker.sock
+              readOnly: true
+            - name: varlibdocker
+              mountPath: /var/lib/docker
+              readOnly: true
+            - name: sys
+              mountPath: /sys
+              readOnly: true
+            - name: devdisk
+              mountPath: /dev/disk
+              readOnly: true
+            - name: otel-agent-config-vol
+              mountPath: /conf
+          resources:
+            limits:
+              cpu:  200m
+              memory: 200Mi
+            requests:
+              cpu: 200m
+              memory: 200Mi
+      volumes:
+        - configMap:
+            name: otel-agent-conf-prom
+            items:
+              - key: otel-agent-config
+                path: otel-agent-config.yaml
+          name: otel-agent-config-vol
+        - name: rootfs
+          hostPath:
+            path: /
+        - name: dockersock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: varlibdocker
+          hostPath:
+            path: /var/lib/docker
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: devdisk
+          hostPath:
+            path: /dev/disk/
+      serviceAccountName: aws-otel-sa

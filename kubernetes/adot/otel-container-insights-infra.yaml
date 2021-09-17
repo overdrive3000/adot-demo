@@ -192,9 +192,14 @@ spec:
         - name: aws-otel-collector
           image: amazon/aws-otel-collector:v0.11.0
           ports:
-           - containerPort: 9411
-             hostPort: 9411
-             name: zipkin-receiver
+            - containerPort: 6832
+              name: thrift-binary
+            - containerPort: 14268
+              name: thrift-http
+            - containerPort: 14250
+              name: grpc
+            - containerPort: 6831
+              name: thrift_compact
           env:
             - name: K8S_NODE_NAME
               valueFrom:
@@ -277,6 +282,9 @@ spec:
 #  ports:
 #    - name: thrift-binary
 #      port: 6832
+#      protocol: UDP
+#    - name: thrift-compact
+#      port: 6831
 #      protocol: UDP
 #    - name: thrift-http
 #      port: 14268
