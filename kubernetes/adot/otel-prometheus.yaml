@@ -1,54 +1,4 @@
 ---
-# create cwagent service account and role binding
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: aws-otel-sa-prom
-  namespace: aws-otel-eks
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::${ACCOUNT_ID}:role/AWSDistroOpenTelemetryRole
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: aoc-agent-role-prom
-rules:
-  - nonResourceURLs: ["/metrics"] 
-    verbs: ["get"]
-  - apiGroups: [""]
-    resources: ["pods", "nodes", "endpoints", "services"]
-    verbs: ["list", "watch"]
-  - apiGroups: ["apps"]
-    resources: ["replicasets"]
-    verbs: ["list", "watch"]
-  - apiGroups: ["batch"]
-    resources: ["jobs"]
-    verbs: ["list", "watch"]
-  - apiGroups: [""]
-    resources: ["nodes/proxy"]
-    verbs: ["get"]
-  - apiGroups: [""]
-    resources: ["nodes/stats", "configmaps", "events"]
-    verbs: ["create", "get"]
-  - apiGroups: [""]
-    resources: ["configmaps"]
-    resourceNames: ["otel-container-insight-clusterleader"]
-    verbs: ["get","update"]
-
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: aoc-agent-role-binding-prom
-subjects:
-  - kind: ServiceAccount
-    name: aws-otel-sa-prom
-    namespace: aws-otel-eks
-roleRef:
-  kind: ClusterRole
-  name: aoc-agent-role
-  apiGroup: rbac.authorization.k8s.io
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -246,4 +196,4 @@ spec:
         - name: devdisk
           hostPath:
             path: /dev/disk/
-      serviceAccountName: aws-otel-sa-prom
+      serviceAccountName: aws-otel-sa
