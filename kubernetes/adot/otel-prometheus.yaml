@@ -77,35 +77,35 @@ data:
             metric_name_selectors:
               - "^etcd_object_counts$"
             label_matcher:
-              label_names:
-                - job
-                - name
-              regexp: "^kubernetes-apiservers;(services|daemonsets.apps|deployments.apps|configmaps|endpoints|secrets|serviceaccounts|replicasets.apps)"
+              - label_names:
+                  - job
+                  - name
+                regex: "^kubernetes-apiservers;(services|daemonsets.apps|deployments.apps|configmaps|endpoints|secrets|serviceaccounts|replicasets.apps)"
           - dimensions: [["ClusterName","Service","name"]]
             metric_name_selectors:
               - "^workqueue_depth$",
               - "^workqueue_adds_total$",
-              - "^workqueue_retries_total$
+              - "^workqueue_retries_total$"
             label_matcher:
-              label_names:
-                - job
-                - name
-              regexp: "^kubernetes-apiservers;APIServiceRegistrationController$"
+              - label_names:
+                  - job
+                  - name
+                regex: "^kubernetes-apiservers;APIServiceRegistrationController$"
           - dimensions: [["ClusterName","Service","code"]]
             metric_name_selectors:
               - "^apiserver_request_total$"
             label_matcher:
-              label_names:
-                - job
-                - code
-              regexp: "^kubernetes-apiservers;2[0-9]{2}$"
+              - label_names:
+                  - job
+                  - code
+                regex: "^kubernetes-apiservers;2[0-9]{2}$"
           - dimensions: [["ClusterName","Service"]]
             metric_name_selectors:
               - "^apiserver_request_total$"
             label_matcher:
-              label_names:
-                - job
-              regexp: "^kubernetes-apiservers"
+              - label_names:
+                  - job
+                regex: "^kubernetes-apiservers"
 
     service:
       pipelines:
