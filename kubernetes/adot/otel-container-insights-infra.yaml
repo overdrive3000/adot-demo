@@ -72,6 +72,12 @@ data:
 
     receivers:
       awscontainerinsightreceiver:
+      #jaeger:
+      #  protocols:
+      #    thrift_binary:
+      #    thrift_http:
+      #    grpc:
+
 
     processors:
       batch/metrics:
@@ -148,6 +154,8 @@ data:
           - dimensions: [[Namespace, ClusterName], [ClusterName]]
             metric_name_selectors:
               - namespace_number_of_running_pods
+      #awsxray:
+      #  region: ${AWS_REGION}
 
     service:
       pipelines:
@@ -155,6 +163,11 @@ data:
           receivers: [awscontainerinsightreceiver]
           processors: [batch/metrics]
           exporters: [awsemf]
+        #traces/applications:
+        #  receivers: [jaeger]
+        #  processors: []
+        #  exporters: [awsxray]
+
 
       extensions: [health_check]
 
@@ -251,7 +264,8 @@ spec:
           hostPath:
             path: /dev/disk/
       serviceAccountName: aws-otel-sa
----
+
+#---
 #apiVersion: v1
 #kind: Service
 #metadata:
