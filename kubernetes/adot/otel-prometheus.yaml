@@ -112,7 +112,11 @@ data:
         metrics:
           receivers: [prometheus]
           processors: [resourcedetection, resource]
-          exporters: [awsemf, awsprometheusremotewrite]
+          exporters: [awsemf]
+        metrics/prom:
+          receivers: [prometheus]
+          processors: [batch]
+          exporters: [awsprometheusremotewrite]
 
 
       extensions: [health_check]
