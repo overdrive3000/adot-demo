@@ -60,11 +60,11 @@ data:
             action: insert
 
     exporters:
-      awsprometheusremotewrite:
-        endpoint: https://aps-workspaces.eu-central-1.amazonaws.com/workspaces/ws-ebc39da9-0905-4464-a168-932def50ea76/api/v1/remote_write
-        aws_auth:
-          service: "aps"
-          region: ${AWS_REGION}
+      #awsprometheusremotewrite:
+      #  endpoint: https://aps-workspaces.eu-central-1.amazonaws.com/workspaces/${WORKSPACE_ID}/api/v1/remote_write
+      #  aws_auth:
+      #    service: "aps"
+      #    region: ${AWS_REGION}
       awsemf:
         namespace: ContainerInsights/Prometheus
         log_group_name: "/aws/containerinsights/{ClusterName}/prometheus"
@@ -113,10 +113,10 @@ data:
           receivers: [prometheus]
           processors: [resourcedetection, resource]
           exporters: [awsemf]
-        metrics/prom:
-          receivers: [prometheus]
-          processors: [batch]
-          exporters: [awsprometheusremotewrite]
+        #metrics/prom:
+        #  receivers: [prometheus]
+        #  processors: [batch]
+        #  exporters: [awsprometheusremotewrite]
 
 
       extensions: [health_check]
