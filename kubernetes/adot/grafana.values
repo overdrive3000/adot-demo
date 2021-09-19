@@ -4,6 +4,16 @@ serviceAccount:
   nameTest:
   autoMount: true
 
+service:
+  enabled: true
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+    # targetPort: 4181 To be used with a proxy extraContainer
+  annotations: {}
+  labels: {}
+  portName: service
+
 adminUser: admin
 adminPassword: "eksworkshop"
 
