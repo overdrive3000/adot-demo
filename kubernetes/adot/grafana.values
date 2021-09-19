@@ -1,0 +1,27 @@
+serviceAccount:
+  create: false
+  name: aws-otel-sa
+  nameTest:
+  autoMount: true
+
+adminUser: admin
+adminPassword: "eksworkshop"
+
+env:
+  AWS_SDK_LOAD_CONFIG: true
+  GF_AUTH_SIGV4_AUTH_ENABLED: true
+  AWS_ROLE_ARN: arn:aws:iam::${ACCOUNT_ID}:role/AWSDistroOpenTelemetryRole
+  AWS_WEB_IDENTITY_TOKEN_FILE: /var/run/secrets/eks.amazonaws.com/serviceaccount/token
+  AWS_REGION: ${AWS_REGION}
+
+extraSecretMounts:
+  - name: aws-iam-token
+    mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
+    readOnly: true
+    projected:
+      defaultMode: 420
+      sources:
+        - serviceAccountToken:
+            audience: sts.amazonaws.com
+            expirationSeconds: 86400
+            path: token
