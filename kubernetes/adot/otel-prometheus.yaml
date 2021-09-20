@@ -61,7 +61,7 @@ data:
 
     exporters:
       #awsprometheusremotewrite:
-      #  endpoint: https://aps-workspaces.eu-central-1.amazonaws.com/workspaces/${WORKSPACE_ID}/api/v1/remote_write
+      #  endpoint: https://aps-workspaces.${AWS_REGION}.amazonaws.com/workspaces/${WORKSPACE_ID}/api/v1/remote_write
       #  aws_auth:
       #    service: "aps"
       #    region: ${AWS_REGION}
