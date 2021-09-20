@@ -9,8 +9,8 @@ metadata:
   name: jaeger-tracing-frontend-service
 spec:
   ports:
-    - name: "8080"
-      port: 8080
+    - name: web
+      port: 80
       targetPort: 8080
   selector:
     io.kompose.service: jaeger-tracing-frontend-service
